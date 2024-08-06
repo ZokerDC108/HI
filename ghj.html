@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAWNSHOP</title>
+<style>
+    body { 
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .header {
+        background-color: lavenderblush;
+        padding: 30px;
+        text-align: center;
+    }
+    .navbar {
+        background-color: chartreuse;
+        color: aqua;
+        padding: 12px;
+        text-align: center;
+    }
+    .navbar a {
+        color: azure;
+        text-decoration: underline;
+        padding: 12px;
+    }
+    .products {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .product {
+        background-color: lavenderblush;
+        margin: 10px;
+        padding: 10px;
+        width: max-content;
+        box-shadow: none;
+    }
+    .product img {
+        width: auto;
+        height: auto;
+        object-fit: scale-down;
+    }
+    .product h2 {
+        font-size: medium;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+    .product p {
+        font-size: medium;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+    .product button {
+        background-color: greenyellow;
+        color: azure;
+        border: none;
+        padding: 12px;
+        width: fit-content;
+        cursor: pointer;
+    }
+    .product button:hover {
+        background-color: yellowgreen;
+    }
+    .page {
+        display: none;
+    }
+    .page.active {
+        display: block;
+    }
+    .cart-items li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .cart-items button {
+        background-color: red;
+        color: white;
+        cursor: pointer;
+    }
+    #home {
+    background-color: #f0f8ff; /* Alice Blue for a soft background */
+    text-align: center;
+    padding: 40px;
+}
+
+#home h1 {
+    color: #4682b4; /* Steel Blue for a professional look */
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+#home p {
+    color: #696969; /* Dim Gray for text */
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+#home .welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#home .welcome-container img {
+    max-width: 100%;
+    height: auto;
+    margin: 20px 0;
+    border-radius: 10px; /* Rounded corners for images */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+#home .call-to-action {
+    margin-top: 30px;
+}
+
+#home .call-to-action button {
+    background-color: #32cd32; /* Lime Green for the button */
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners for buttons */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+
+#home .call-to-action button:hover {
+    background-color: #228b22; /* Forest Green on hover */
+    transform: scale(1.05); /* Slightly larger on hover */
+}
+
+</style>
+</head>
+<body>
+<div class="header">
+    <h1>HYPE SHOP</h1>
+</div>
+<nav class="navbar">
+    <ul>
+        <li><a href="#home" onclick="showPage('home')">Home</a></li>
+        <li><a href="#products" onclick="showPage('products')">Products</a></li>
+        <li><a href="#about" onclick="showPage('about')">About</a></li>
+        <li><a href="#contact" onclick="showPage('contact')">Contact</a></li>
+        <li><a href="#cart" onclick="showPage('cart')">Cart</a></li>
+    </ul>
+</nav>
+<div class="container">
+    <div id="home" class="page active">
+        <div class="welcome-container">
+            <h1>Welcome to Our Shop</h1>
+            <img src="https://images.app.goo.gl/oFNdHeWGQ9nfW4qv8" alt="Welcome Image"> <!-- Placeholder for a welcome image -->
+            <p>Browse our products, buy or add them to your cart! We offer a range of high-quality items at unbeatable prices. Explore our diverse collection and find what you're looking for.</p>
+        </div>
+        <div class="call-to-action">
+            <button onclick="showPage('products')">Explore Products</button>
+        </div>
+    </div>
+    <div id="products" class="page">
+        <h1>Our Products</h1>
+        <div class="products">
+            <div class="product">
+                <img src="https://m.media-amazon.com/images/I/71657TiFeHL._SX679_.jpg" alt="iPhone 15">
+                <h2>iPhone 15</h2>
+                <p>Price: 70999</p>
+                <a href="https://amzn.in/d/8j7IQtu" target="_blank"><button>Buy</button></a>
+                <button onclick="addToCart('iPhone 15', 70999)">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+    <div id="cart" class="page">
+        <h1>Your Cart</h1>
+        <ul class="cart-items">
+            <!-- Items will be dynamically added here -->
+        </ul>
+        <button class="buy-button" onclick="buyNow()">Buy Now</button>
+    </div>
+</div>
+<script>
+    let cartItems = [];
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(function(page) {
+            page.classList.remove('active');
+        });
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    function addToCart(name, price) {
+        const product = { name, price };
+        cartItems.push(product);
+        updateCart();
+    }
+
+    function removeFromCart(index) {
+        cartItems.splice(index, 1);
+        updateCart();
+    }
+
+    function updateCart() {
+        const cartList = document.querySelector('.cart-items');
+        cartList.innerHTML = ''; // Clear existing items
+        cartItems.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>${item.name} - ${item.price}</span>
+                <button onclick="removeFromCart(${index})">Remove</button>
+            `;
+            cartList.appendChild(li);
+        });
+    }
+
+    function buyNow() {
+        if (cartItems.length === 0) {
+            alert("Your cart is empty.");
+        } else {
+            // Simulate checkout
+            alert("Thank you for your purchase!");
+            cartItems = []; // Clear cart
+            updateCart(); // Update cart display
+        }
+    }
+</script>
+</body>
+</html>
